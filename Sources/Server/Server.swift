@@ -1,5 +1,6 @@
 import ArgumentParser
 import Hummingbird
+import Foundation
 
 @main
 struct Server: ParsableCommand {
@@ -25,23 +26,36 @@ struct Server: ParsableCommand {
   }
 }
 
+extension String {
+  var droppingTrailingSlash: String {
+    guard self.hasSuffix("/") else {
+      return self
+    }
+
+    return String(self.dropLast())
+  }
+}
+
 extension HBApplication {
+
   public func configure(with location: String) throws {
+    let location = location.droppingTrailingSlash
 
     router.get("/healthy") { _ in
       "Healthy. Redirecting to: \(location)"
     }
 
-    let redirectResponse = HBResponse(
-      status: .movedPermanently,
-      headers: ["Location": location]
-    )
-
-    router.get("/*") { _ in
-      redirectResponse
+    router.get("/*") { req -> HBResponse in
+      HBResponse(
+        status: .movedPermanently,
+        headers: ["Location": location + req.uri.path]
+      )
     }
     router.get("/") { _ in
-      redirectResponse
+      HBResponse(
+        status: .movedPermanently,
+        headers: ["Location": location]
+      )
     }
   }
 }
