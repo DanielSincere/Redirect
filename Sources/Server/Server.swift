@@ -19,14 +19,19 @@ struct Server: ParsableCommand {
         serverName: "Hummingbird"
       )
     )
-    try app.setupRedirects(to: location)
+    try app.configure(with: location)
     try app.start()
     app.wait()
   }
 }
 
 extension HBApplication {
-  public func setupRedirects(to location: String) throws {
+  public func configure(with location: String) throws {
+
+    router.get("/healthy") { _ in
+      "Healthy. Redirecting to: \(location)"
+    }
+
     let redirectResponse = HBResponse(
       status: .movedPermanently,
       headers: ["Location": location]
