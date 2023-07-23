@@ -30,7 +30,7 @@ let package = Package(
     .testTarget(
       name: "ServerTests",
       dependencies: [
-        .byName(name: "Server"),
+        .target(name: "Server"),
         .product(name: "HummingbirdXCT", package: "hummingbird"),
       ]
     ),
