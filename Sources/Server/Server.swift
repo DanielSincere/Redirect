@@ -45,7 +45,7 @@ extension HBApplication {
       "Healthy. Redirecting to: \(location)"
     }
 
-    router.get("/*") { req in
+    router.get("**") { req in
       HBResponse(
         status: .movedPermanently,
         headers: ["Location": location + req.uri.path]

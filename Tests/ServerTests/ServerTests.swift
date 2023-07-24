@@ -23,6 +23,12 @@ final class ServerTests: XCTestCase {
       XCTAssertNil(response.body)
     }
 
+    try app.XCTExecute(uri: "/example/path", method: .GET) { response in
+      XCTAssertEqual(response.status, .movedPermanently)
+      XCTAssertEqual(response.headers.first(name: "location"), "https://example.org/example/path")
+      XCTAssertNil(response.body)
+    }
+
     try app.XCTExecute(uri: "/healthy123", method: .GET) { response in
       XCTAssertEqual(response.status, .movedPermanently)
       XCTAssertEqual(response.headers.first(name: "location"), "https://example.org/healthy123")
@@ -52,6 +58,12 @@ final class ServerTests: XCTestCase {
     try app.XCTExecute(uri: "/example", method: .GET) { response in
       XCTAssertEqual(response.status, .movedPermanently)
       XCTAssertEqual(response.headers.first(name: "location"), "https://example.org/example")
+      XCTAssertNil(response.body)
+    }
+
+    try app.XCTExecute(uri: "/example/path", method: .GET) { response in
+      XCTAssertEqual(response.status, .movedPermanently)
+      XCTAssertEqual(response.headers.first(name: "location"), "https://example.org/example/path")
       XCTAssertNil(response.body)
     }
 
